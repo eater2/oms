@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.marek.Rekrutacja3ApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.27 sec - in com.marek.Rekrutacja3ApplicationTests
