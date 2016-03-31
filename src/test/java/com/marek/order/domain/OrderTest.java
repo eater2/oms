@@ -25,8 +25,8 @@ public class OrderTest {
 
     private static final Logger log = LoggerFactory.getLogger(OrderTest.class);
 
+    private static final long DEFAULT_ID = 10;
     private static final String DEFAULT_ORDERDESCRIPTION = "Updated Order Description";
-    private static final String UPDATED_ORDERDESCRIPTION = "Updated Order Description";
     private static final String DEFAULT_ITEM1 = "ITEM1";
     private static final String DEFAULT_ITEM2 = "ITEM2";
     private static final int DEFAULT_ITEM_LIST_SIZE = 2;
@@ -40,29 +40,19 @@ public class OrderTest {
     @Autowired
     OrderIfc order1;
 
-
     @Before
     public void setUp() {
-        order.setOrderDescription(DEFAULT_ORDERDESCRIPTION);
-        order.setItemList(Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
-        order.setOrderStatus(DEFAULT_ORDER_STATUS);
+        order.copyFrom(DEFAULT_ID,DEFAULT_ORDER_STATUS,DEFAULT_ORDERDESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
     }
 
     @Test
     public void testGetId() throws Exception {
-        log.info("order getid"+order.getId());
-        assertTrue(order.getId() > 0);
+        assertEquals(DEFAULT_ID,order.getId());
     }
 
     @Test
     public void testGetOrderDescription() throws Exception {
         assertEquals(DEFAULT_ORDERDESCRIPTION,order.getOrderDescription());
-    }
-
-    @Test
-    public void testSetOrderDescription() throws Exception {
-        order.setOrderDescription(UPDATED_ORDERDESCRIPTION);
-        assertEquals(UPDATED_ORDERDESCRIPTION, order.getOrderDescription());
     }
 
     @Test
@@ -81,16 +71,10 @@ public class OrderTest {
     }
 
     @Test
-    public void testSetOrderStatus() throws Exception {
-        order.setOrderStatus(UPDATED_ORDER_STATUS);
-        assertEquals(UPDATED_ORDER_STATUS,order.getOrderStatus());
-    }
-
-    @Test
     public void testFilterOrderList() throws Exception {
-        //usage of Predicate object in Lambda
         List<OrderIfc> orderList = new ArrayList<>(Arrays.asList(order,order1));
-        //only 1 order has items list
+        //only 1 order has items list not empty
+        //[java8] [Predicate] usage of Predicate object in Lambda
         List<OrderIfc> orderListWithItems = order.filterOrderList(orderList,(o)-> o.getItemList().size()>0);
 
         assertEquals(1,orderListWithItems.size());

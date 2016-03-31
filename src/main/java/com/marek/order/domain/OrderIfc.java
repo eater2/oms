@@ -8,23 +8,21 @@ import java.util.function.Predicate;
  */
 public interface OrderIfc {
 
+    OrderIfc copyFrom(long id, OrderStatusEnum orderStatus, String orderDescription, List<String> itemList);
+
+    OrderIfc copyFrom(OrderIfc order, OrderStatusEnum orderStatus);
+
+    OrderIfc copyFrom(OrderIfc order);
+
     public long getId();
 
     public String getOrderDescription();
 
-    public void setOrderDescription(String orderDescription);
-
     public List<String> getItemList();
-
-    public void setItemList(List<String> itemList);
 
     public int getOrderSequence();
 
     public OrderStatusEnum getOrderStatus();
-
-    public OrderIfc setOrderStatus(OrderStatusEnum orderStatus) ;
-
-    public OrderIfc copyFrom(OrderIfc order);
 
     public List<OrderIfc> filterOrderList(List<OrderIfc> orders, Predicate<OrderIfc> predicate);
 

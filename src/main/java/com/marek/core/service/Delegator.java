@@ -19,41 +19,40 @@ import java.util.concurrent.Executors;
 public class Delegator implements DelegatorIfc {
     private static final Logger log = LoggerFactory.getLogger(Delegator.class);
 
-    @Autowired
-    FulfillmentCreateIfc fulfillment;
-
-    @Autowired
-    OrderIfc orderNew;
-
-    @Autowired
-    OrderIfc orderFulfillmentStart;
-
-    @Autowired
-    OrderIfc orderFulfillmentEnd;
-
-    @Autowired
-    OrderIfc orderFulfillmentError;
+    private FulfillmentCreateIfc fulfillment;
 
     private EventStoreIfc eventStore;
 
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    @Override
-    public void setEventStore(EventStoreIfc eventStore) {
+    @Autowired
+    OrderIfc orderFulfillmentStart;
+    @Autowired
+    OrderIfc orderFulfillmentEnd;
+    @Autowired
+    OrderIfc orderFulfillmentError;
+
+    @Autowired
+    public Delegator(EventStoreIfc eventStore,FulfillmentCreateIfc fulfillment) {
         this.eventStore = eventStore;
+        this.fulfillment = fulfillment;
     }
 
     @Override
     public int delegate() {
         int ordersProcessed = 0;
 
-        eventStore.getOrdersSet().get().stream().map()
+        //eventStore.getOrdersSet().get().stream().map()
 
-        for (Long orderNbr : eventStore.getOrdersSet().get()) {
+        log.info("delegate 0");
+
+        eventStore.getOrdersSet()
+
+        for (Long orderNbr : eventStore.getOrdersSet()) {
             log.info("delegate 1,Key:" + orderNbr);
             if (eventStore.getLastOrderEvent(orderNbr).isPresent()) {
                 log.info("delegate 2,Key:" + orderNbr);
-                orderNew = eventStore.getLastOrderEvent(orderNbr).get();
+                OrderIfc orderNew = eventStore.getLastOrderEvent(orderNbr).get();
                 if (orderNew.getOrderStatus() == OrderStatusEnum.INSERTED_END) {
                     log.info("delegate 3,Key:" + orderNbr);
                     ordersProcessed = fulfillmentProcess(orderNbr, orderNew)?++ordersProcessed:ordersProcessed;
@@ -65,20 +64,21 @@ public class Delegator implements DelegatorIfc {
 
     private boolean fulfillmentProcess(Long orderNbr, OrderIfc order) {
         try {
-            orderFulfillmentStart.copyFrom(order).setOrderStatus(OrderStatusEnum.FULFILLMENT_START);
+            orderFulfillmentStart.copyFrom(order,OrderStatusEnum.FULFILLMENT_START);
             eventStore.addEvent(orderNbr, orderFulfillmentStart);
 
-            orderFulfillmentEnd.copyFrom(fulfillment.process(orderFulfillmentStart)).setOrderStatus(OrderStatusEnum.FULFILLMENT_END);
+            orderFulfillmentEnd.copyFrom(order,OrderStatusEnum.FULFILLMENT_END);
             eventStore.addEvent(orderNbr, orderFulfillmentEnd);
 
-            CompletableFuture<OrderIfc> future = CompletableFuture.supplyAsync(() -> fulfillment.process(orderNew), executor);
+            //[java8] [CompletableFuture]
+            //TODO add a compatablefuture
+            //CompletableFuture<OrderIfc> future = CompletableFuture.supplyAsync(() -> fulfillment.process(orderNew), executor);
 
             log.info("Successfully processed fulfillment order nbr: " + orderNbr);
             return true;
         } catch (Exception e) {
             log.error("exception:" + e);
-            orderFulfillmentError = order;
-            orderFulfillmentError.setOrderStatus(OrderStatusEnum.FULFILLMENT_ERROR);
+            orderFulfillmentError.copyFrom(order,OrderStatusEnum.FULFILLMENT_ERROR);
             eventStore.addEvent(orderNbr, orderFulfillmentError);
             return false;
         }

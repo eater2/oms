@@ -13,7 +13,7 @@ public interface EventStoreIfc {
 
     Optional<OrderIfc> addEvent(Long orderNumber, OrderIfc order);
 
-    Optional<Set<Long>> getOrdersSet();
+    Set<Long> getOrdersSet();
 
     public void reset();
 

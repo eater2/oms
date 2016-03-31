@@ -2,6 +2,7 @@ package com.marek.core.service;
 
 import com.marek.Application;
 import com.marek.order.domain.OrderIfc;
+import com.marek.order.domain.OrderStatusEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,9 @@ public class EventStoreTest {
 
     private static final Logger log = LoggerFactory.getLogger(EventStoreTest.class);
 
-    private static final String DEFAULT_ORDERDESCRIPTION = "Order Description";
+    private static final long DEFAULT_ID = 10;
+    private static final OrderStatusEnum DEFAULT_ORDER_STATUS = OrderStatusEnum.INSERTED_END;
+    private static final String DEFAULT_ORDER_DESCRIPTION = "Order Description";
     private static final String DEFAULT_ITEM1 = "ITEM1";
     private static final String DEFAULT_ITEM2 = "ITEM2";
 
@@ -37,31 +40,26 @@ public class EventStoreTest {
     @Before
     public void setUp() {
         eventStore.reset();
-        List<OrderIfc> orderList = new ArrayList<>(Arrays.asList(order1,order2,order3));
-        for (OrderIfc order : orderList) {
-            order.setOrderDescription(DEFAULT_ORDERDESCRIPTION);
-            order.setItemList(Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
-            long orderNbr = Long.valueOf(order.getId());
-            eventStore.addEvent(orderNbr, order);
-
-        }
+        eventStore.addEvent(DEFAULT_ID,order1.copyFrom(DEFAULT_ID,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
+        eventStore.addEvent(DEFAULT_ID+1,order2.copyFrom(DEFAULT_ID+1,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
+        eventStore.addEvent(DEFAULT_ID+2,order3.copyFrom(DEFAULT_ID+2,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
     }
 
     @Test
     public void eventStoreContainsOrder() throws Exception {
-        assertEquals(Optional.of(order3),eventStore.getLastOrderEvent(order3.getId()));
+        assertEquals(order3,eventStore.getLastOrderEvent(order3.getId()).get());
     }
 
     @Test
     public void getOrdersSetTest() {
-        assertEquals(3,eventStore.getOrdersSet().get().size());
+        assertEquals(3,eventStore.getOrdersSet().size());
         log.info(eventStore.toString());
     }
 
     @Test
     public void resetTest() {
         eventStore.reset();
-        assertEquals(0,eventStore.getOrdersSet().get().size());
+        assertEquals(0,eventStore.getOrdersSet().size());
     }
 
 

@@ -28,16 +28,17 @@ public class DelegatorTest {
 
     private static final Logger log = LoggerFactory.getLogger(DelegatorTest.class);
 
+    private static final long DEFAULT_ID = 10;
     private static final String DEFAULT_ORDERDESCRIPTION = "Order Description";
     private static final OrderStatusEnum DEFAULT_ORDER_STATUS = OrderStatusEnum.INSERTED_END;
     private static final String DEFAULT_ITEM1 = "ITEM1";
     private static final String DEFAULT_ITEM2 = "ITEM2";
 
     @Autowired
-    DelegatorIfc delegator;
+    EventStoreIfc eventStore;
 
     @Autowired
-    EventStore eventStore;
+    DelegatorIfc delegator;
 
     @Autowired
     OrderIfc order1;
@@ -50,33 +51,29 @@ public class DelegatorTest {
 
     @Before
     public void setUp() throws Exception {
-
+        order1.copyFrom(DEFAULT_ID+2,DEFAULT_ORDER_STATUS,DEFAULT_ORDERDESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
+        order2.copyFrom(DEFAULT_ID,DEFAULT_ORDER_STATUS,DEFAULT_ORDERDESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
+        order3.copyFrom(DEFAULT_ID+1,DEFAULT_ORDER_STATUS,DEFAULT_ORDERDESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
 
         List<OrderIfc> orderList = new ArrayList<>(Arrays.asList(order1,order2,order3));
-        //usage of Comparator object to sort Order elements withou specifying copmareTo in Order Class
+
+        //usage of [java8] [Comparator] object to sort Order elements without specifying copmareTo in Order Class
         //1st option
         orderList.sort((o1, o2) -> Long.valueOf(o1.getId()).compareTo(Long.valueOf(o2.getId())));
         //2nd option - the same exactly
         orderList.sort(comparing(OrderIfc::getId));
 
-        //usage of Predicate object in Lambda
-        List<OrderIfc> orderListWithoutItems = order1.filterOrderList(orderList,(o)-> o.getItemList().size()==0);
+        //usage of [java8] [Predicate] object in Lambda
+        List<OrderIfc> orderListWithItems = order1.filterOrderList(orderList,(o)-> o.getItemList().size()>0);
 
-        for (OrderIfc order : orderListWithoutItems) {
+        //Push 3 orders into EventStore
+        orderList.stream().forEach(o->eventStore.addEvent(o.getId(),o));;
 
-            order.setOrderDescription(DEFAULT_ORDERDESCRIPTION);
-            order.setItemList(Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
-            order.setOrderStatus(DEFAULT_ORDER_STATUS);
-
-            long orderNbr = Long.valueOf(order.getId());
-            eventStore.addEvent(orderNbr, order);
-            log.info("Test Order id created:"+order.getId());
-        }
-        delegator.setEventStore(eventStore);
     }
 
     @Test
     public void delegateTest() throws Exception {
+        log.info("event store size:"+ eventStore.getOrdersSet().size());
         assertEquals(3,delegator.delegate());
         assertEquals(OrderStatusEnum.FULFILLMENT_END,eventStore.getLastOrderEvent(order1.getId()).get().getOrderStatus());
         assertEquals(OrderStatusEnum.FULFILLMENT_END,eventStore.getLastOrderEvent(order2.getId()).get().getOrderStatus());

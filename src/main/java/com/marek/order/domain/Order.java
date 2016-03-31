@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 class Order implements OrderIfc{
 
-    private final long id;
+    private long id;
 
     private static final AtomicInteger INITIAL_ORDER_SEQUENCE = new AtomicInteger(0);
     private static AtomicInteger orderSequence = INITIAL_ORDER_SEQUENCE;
@@ -26,20 +26,38 @@ class Order implements OrderIfc{
 
     private OrderStatusEnum orderStatus;
 
-    private List<String> itemList;
+    private List<String> itemList = new ArrayList<>();
 
     public Order() {
         this.id = orderSequence.incrementAndGet();
     }
 
     @Override
+    public OrderIfc copyFrom(long id,OrderStatusEnum orderStatus, String orderDescription, List<String> itemList) {
+        this.id = id;
+        //[java8] [Collectors] deep copy the list of strings
+        this.itemList = itemList.stream().collect(Collectors.toList());
+        this.orderDescription = orderDescription;
+        this.orderStatus = orderStatus;
+        return this;
+    }
+
+    @Override
+    public OrderIfc copyFrom(OrderIfc order, OrderStatusEnum orderStatus) {
+        copyFrom(order);
+        this.orderStatus = orderStatus;
+        return this;
+    }
+
+    @Override
     public OrderIfc copyFrom(OrderIfc order) {
-        this.itemList = order.getItemList();
+        this.id = order.getId();
+        //[java8] [Collectors] deep copy the list of strings
+        this.itemList = order.getItemList().stream().collect(Collectors.toList());
         this.orderDescription = order.getOrderDescription();
         this.orderStatus = order.getOrderStatus();
         return this;
     }
-
 
     @Override
     public long getId() {
@@ -52,18 +70,8 @@ class Order implements OrderIfc{
     }
 
     @Override
-    public void setOrderDescription(String orderDescription) {
-        this.orderDescription = orderDescription;
-    }
-
-    @Override
     public List<String> getItemList() {
         return null==itemList?new ArrayList<>():itemList;
-    }
-
-    @Override
-    public void setItemList(List<String> itemList) {
-        this.itemList = itemList;
     }
 
     @Override
@@ -74,12 +82,6 @@ class Order implements OrderIfc{
     @Override
     public OrderStatusEnum getOrderStatus() {
         return orderStatus;
-    }
-
-    @Override
-    public OrderIfc setOrderStatus(OrderStatusEnum orderStatus) {
-        this.orderStatus = orderStatus;
-        return this;
     }
 
     @Override

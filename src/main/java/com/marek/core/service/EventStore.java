@@ -1,7 +1,6 @@
 package com.marek.core.service;
 
 import com.marek.order.domain.OrderIfc;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,16 +13,18 @@ import java.util.stream.Collectors;
 @Service
 public class EventStore implements EventStoreIfc {
 
-    @Autowired
-    private OrderIfc order;
-
     private final StampedLock stampedLock = new StampedLock();
 
     private final HashMap<Long, ArrayList<OrderIfc>> events = new HashMap<>();
 
     @Override
-    public Optional<Set<Long>> getOrdersSet() {
-        return Optional.of(events.keySet()!=null?events.keySet():new HashSet<>());
+    public Set<Long> getOrdersSet() {
+        return null != events.keySet() ? events.keySet() : new HashSet<>();
+    }
+
+    @Override
+    public Collection<List<OrderIfc>> getOrdersSet() {
+        return null != events.values() ? events.values() : new HashSet<>();
     }
 
     @Override
@@ -32,21 +33,25 @@ public class EventStore implements EventStoreIfc {
         events.clear();
     }
 
-        @Override
+    @Override
     public Optional<OrderIfc> getLastOrderEvent(Long orderNumber) {
         //If no threads are writing, and no threads have requested write access
         long stamp = stampedLock.tryOptimisticRead();
-        List<OrderIfc> orders = events.get(orderNumber);
-
-        if (stampedLock.validate(stamp)) {
-            return Optional.ofNullable(orders.get(orders.size() - 1));
-        } else {
-            stamp = stampedLock.readLock();
-            try {
+        if (events.size() > 0) {
+            List<OrderIfc> orders = events.get(orderNumber);
+            if (stampedLock.validate(stamp)) {
                 return Optional.ofNullable(orders.get(orders.size() - 1));
-            } finally {
-                stampedLock.unlockRead(stamp);
+            } else {
+                stamp = stampedLock.readLock();
+                try {
+                    return Optional.ofNullable(orders.get(orders.size() - 1));
+                } finally {
+                    stampedLock.unlockRead(stamp);
+                }
             }
+        }
+        else {
+            return Optional.empty();
         }
     }
 
@@ -57,9 +62,9 @@ public class EventStore implements EventStoreIfc {
 
         try {
             if (events.containsKey(orderNumber)) {
-                return Optional.ofNullable(events.get(orderNumber).add(order)?order:null);
+                return Optional.ofNullable(events.get(orderNumber).add(order) ? order : null);
             } else {
-                events.put(orderNumber,new ArrayList<>(Arrays.asList(order)));
+                events.put(orderNumber, new ArrayList<>(Arrays.asList(order)));
                 return Optional.of(order);
             }
 
@@ -72,9 +77,9 @@ public class EventStore implements EventStoreIfc {
     public String toString() {
         return "EventStore{" +
                 events.entrySet()
-                .stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList()) +
+                        .stream()
+                        .map(Map.Entry::getValue)
+                        .collect(Collectors.toList()) +
                 '}';
     }
 }

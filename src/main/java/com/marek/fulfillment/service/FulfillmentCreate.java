@@ -17,13 +17,13 @@ public class FulfillmentCreate implements FulfillmentCreateIfc {
     @Override
     public OrderIfc process(OrderIfc order) {
         try {
-            order.setOrderStatus(OrderStatusEnum.FULFILLMENT_END);
+            order.copyFrom(order,OrderStatusEnum.FULFILLMENT_END);
             return order;
         }
         catch (Exception e)
         {
             log.error(e.getMessage()+e);
-            order.setOrderStatus(OrderStatusEnum.FULFILLMENT_ERROR);
+            order.copyFrom(order,OrderStatusEnum.FULFILLMENT_ERROR);
             return order;
         }
     }
