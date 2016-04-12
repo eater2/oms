@@ -10,5 +10,8 @@ public enum OrderStatusEnum {
     FULFILLMENT_ERROR,
     INVENTORY_START,
     INVENTORY_END,
-    INVENTORY_ERROR
+    INVENTORY_ERROR,
+    SHIP_START,
+    SHIP_END,
+    SHIP_ERROR
 }

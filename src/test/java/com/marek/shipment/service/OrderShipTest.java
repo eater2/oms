@@ -1,4 +1,4 @@
-package com.marek.fulfillment.service;
+package com.marek.shipment.service;
 
 import com.marek.Application;
 import com.marek.order.domain.Order;
@@ -10,23 +10,29 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.*;
 
 /**
- * Created by marek.papis on 2016-03-23.
+ * Created by marek.papis on 2016-04-12.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-public class FulfillmentCreateTest {
+public class OrderShipTest {
+
 
     @Autowired
     Order order;
 
     @Autowired
-    FulfillmentCreate fulfillment;
+    private OrderShip orderShipService;
+
+    @Before
+    public void setUp() throws Exception {
+
+    }
 
     @Test
     public void shouldChangeStatus() throws Exception {
-        assertEquals(fulfillment.getEndProcessingStatus(),fulfillment.process(order).getOrderStatus());
+        assertEquals(orderShipService.getEndProcessingStatus(),orderShipService.process(order).getOrderStatus());
     }
 }

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Scope("prototype")
-class Order implements OrderIfc{
+public class Order {
 
     private long id;
 
@@ -32,60 +32,53 @@ class Order implements OrderIfc{
         this.id = orderSequence.incrementAndGet();
     }
 
-    @Override
-    public OrderIfc copyFrom(long id,OrderStatusEnum orderStatus, String orderDescription, List<String> itemList) {
-        this.id = id;
+    public Order copyFrom(long id,OrderStatusEnum orderStatus, String orderDescription, List<String> itemList) {
+        Order order1 = new Order();
+        order1.id = id;
+        order1.orderStatus = orderStatus;
+        order1.orderDescription = orderDescription;
         //[java8] [Collectors] deep copy the list of strings
-        this.itemList = itemList.stream().collect(Collectors.toList());
-        this.orderDescription = orderDescription;
-        this.orderStatus = orderStatus;
-        return this;
+        order1.itemList = itemList.stream().collect(Collectors.toList());
+        return order1;
     }
 
-    @Override
-    public OrderIfc copyFrom(OrderIfc order, OrderStatusEnum orderStatus) {
-        copyFrom(order);
-        this.orderStatus = orderStatus;
-        return this;
+    public Order copyFrom(Order order, OrderStatusEnum orderStatus) {
+        Order order1 = copyFrom(order);
+        order1.orderStatus = orderStatus;
+        return  order1;
     }
 
-    @Override
-    public OrderIfc copyFrom(OrderIfc order) {
-        this.id = order.getId();
+    public Order copyFrom(Order order) {
+        Order order1 = new Order();
+        order1.id = order.getId();
         //[java8] [Collectors] deep copy the list of strings
-        this.itemList = order.getItemList().stream().collect(Collectors.toList());
-        this.orderDescription = order.getOrderDescription();
-        this.orderStatus = order.getOrderStatus();
-        return this;
+        order1.itemList = order.getItemList().stream().collect(Collectors.toList());
+        order1.orderDescription = order.getOrderDescription();
+        order1.orderStatus = order.getOrderStatus();
+        return order1;
     }
 
-    @Override
     public long getId() {
         return id;
     }
 
-    @Override
     public String getOrderDescription() {
         return orderDescription;
     }
 
-    @Override
     public List<String> getItemList() {
         return null==itemList?new ArrayList<>():itemList;
     }
 
-    @Override
     public int getOrderSequence() {
         return orderSequence.intValue();
     }
 
-    @Override
     public OrderStatusEnum getOrderStatus() {
         return orderStatus;
     }
 
-    @Override
-    public List<OrderIfc> filterOrderList(List<OrderIfc> orders, Predicate<OrderIfc> predicate){
+    public List<Order> filterOrderList(List<Order> orders, Predicate<Order> predicate){
         return orders.stream().filter(predicate).collect(Collectors.toList());
     }
 

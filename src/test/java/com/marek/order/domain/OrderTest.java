@@ -35,29 +35,32 @@ public class OrderTest {
 
 
     @Autowired
-    OrderIfc order;
+    Order order;
 
     @Autowired
-    OrderIfc order1;
+    Order order1;
+
+    @Autowired
+    Order order2;
 
     @Before
     public void setUp() {
-        order.copyFrom(DEFAULT_ID,DEFAULT_ORDER_STATUS,DEFAULT_ORDERDESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
+        order = order.copyFrom(DEFAULT_ID, DEFAULT_ORDER_STATUS, DEFAULT_ORDERDESCRIPTION, Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
     }
 
     @Test
     public void testGetId() throws Exception {
-        assertEquals(DEFAULT_ID,order.getId());
+        assertEquals(DEFAULT_ID, order.getId());
     }
 
     @Test
     public void testGetOrderDescription() throws Exception {
-        assertEquals(DEFAULT_ORDERDESCRIPTION,order.getOrderDescription());
+        assertEquals(DEFAULT_ORDERDESCRIPTION, order.getOrderDescription());
     }
 
     @Test
     public void testGetItemList() throws Exception {
-        assertEquals(DEFAULT_ITEM_LIST_SIZE,order.getItemList().size());
+        assertEquals(DEFAULT_ITEM_LIST_SIZE, order.getItemList().size());
     }
 
     @Test
@@ -67,17 +70,25 @@ public class OrderTest {
 
     @Test
     public void testGetOrderStatus() throws Exception {
-        assertEquals(DEFAULT_ORDER_STATUS,order.getOrderStatus());
+        assertEquals(DEFAULT_ORDER_STATUS, order.getOrderStatus());
     }
 
     @Test
     public void testFilterOrderList() throws Exception {
-        List<OrderIfc> orderList = new ArrayList<>(Arrays.asList(order,order1));
+        List<Order> orderList = new ArrayList<>(Arrays.asList(order, order1));
         //only 1 order has items list not empty
         //[java8] [Predicate] usage of Predicate object in Lambda
-        List<OrderIfc> orderListWithItems = order.filterOrderList(orderList,(o)-> o.getItemList().size()>0);
+        List<Order> orderListWithItems = order.filterOrderList(orderList, (o) -> o.getItemList().size() > 0);
 
-        assertEquals(1,orderListWithItems.size());
+        assertEquals(1, orderListWithItems.size());
     }
+
+    @Test
+    public void testCopyFrom2Arguments() throws Exception {
+        order2 = order.copyFrom(order,OrderStatusEnum.FULFILLMENT_END);
+        assertEquals(OrderStatusEnum.FULFILLMENT_END,order2.getOrderStatus());
+        assertFalse(order == order2);
+    }
+
 
 }

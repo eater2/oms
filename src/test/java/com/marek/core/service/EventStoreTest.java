@@ -1,7 +1,7 @@
 package com.marek.core.service;
 
 import com.marek.Application;
-import com.marek.order.domain.OrderIfc;
+import com.marek.order.domain.Order;
 import com.marek.order.domain.OrderStatusEnum;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,22 +32,22 @@ public class EventStoreTest {
     private static final String DEFAULT_ITEM2 = "ITEM2";
 
     @Autowired
-    EventStoreIfc eventStore;
+    EventStore eventStore;
 
     @Autowired
-    OrderIfc order1,order2,order3;
+    Order order1;
 
     @Before
     public void setUp() {
         eventStore.reset();
         eventStore.addEvent(DEFAULT_ID,order1.copyFrom(DEFAULT_ID,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
-        eventStore.addEvent(DEFAULT_ID+1,order2.copyFrom(DEFAULT_ID+1,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
-        eventStore.addEvent(DEFAULT_ID+2,order3.copyFrom(DEFAULT_ID+2,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
+        eventStore.addEvent(DEFAULT_ID+1,order1.copyFrom(DEFAULT_ID+1,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
+        eventStore.addEvent(DEFAULT_ID+2,order1.copyFrom(DEFAULT_ID+2,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
     }
 
     @Test
     public void eventStoreContainsOrder() throws Exception {
-        assertEquals(order3,eventStore.getLastOrderEvent(order3.getId()).get());
+        assertEquals(DEFAULT_ID,eventStore.getLastOrderEvent(DEFAULT_ID).get().getId());
     }
 
     @Test

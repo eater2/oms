@@ -1,4 +1,4 @@
-package com.marek.fulfillment.service;
+package com.marek.inventory.service;
 
 import com.marek.core.service.EventProcessingIfc;
 import com.marek.order.domain.Order;
@@ -8,16 +8,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by marek.papis on 2016-03-23.
+ * Created by marek.papis on 2016-04-02.
  */
 @Service
-public class FulfillmentCreate implements EventProcessingIfc {
-    private static final Logger log = LoggerFactory.getLogger(FulfillmentCreate.class);
+public class InventoryCheck implements EventProcessingIfc {
+
+    private static final Logger log = LoggerFactory.getLogger(InventoryCheck.class);
 
     @Override
     public Order process(Order order) {
         try {
-            log.info("order id:"+order.getId()+" processing fulfillment");
+            log.info("order id:"+order.getId()+" processing inventory check");
             return order.copyFrom(order, getEndProcessingStatus());
         } catch (Exception e) {
             log.error(e.getMessage() + e);
@@ -27,16 +28,17 @@ public class FulfillmentCreate implements EventProcessingIfc {
 
     @Override
     public OrderStatusEnum getStartProcessingStatus() {
-        return OrderStatusEnum.FULFILLMENT_START;
+        return OrderStatusEnum.INVENTORY_START;
     }
 
     @Override
     public OrderStatusEnum getEndProcessingStatus() {
-        return OrderStatusEnum.FULFILLMENT_END;
+        return OrderStatusEnum.INVENTORY_END;
     }
 
     @Override
     public OrderStatusEnum getErrorProcessingStatus() {
-        return OrderStatusEnum.FULFILLMENT_ERROR;
+        return OrderStatusEnum.INVENTORY_ERROR;
     }
+
 }
