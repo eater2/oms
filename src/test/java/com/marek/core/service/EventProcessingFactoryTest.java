@@ -2,7 +2,7 @@ package com.marek.core.service;
 
 import com.marek.Application;
 import com.marek.fulfillment.service.FulfillmentCreate;
-import com.marek.order.domain.OrderStatusEnum;
+import com.marek.order.domain.OrderStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,11 +33,11 @@ public class EventProcessingFactoryTest {
 
     @Test
     public void shouldReturnFulfillmentService() throws Exception {
-        assertEquals(fulfillmentCreate,eventProcessingFactory.createEventProcessing(OrderStatusEnum.INVENTORY_END));
+        assertEquals(fulfillmentCreate,eventProcessingFactory.createEventProcessing(OrderStatus.INVENTORY_END));
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void shouldThrowRuntimeException() throws Exception {
-        eventProcessingFactory.createEventProcessing(OrderStatusEnum.FULFILLMENT_START);
+        eventProcessingFactory.createEventProcessing(OrderStatus.FULFILLMENT_START);
     }
 }

@@ -2,7 +2,7 @@ package com.marek.core.service;
 
 import com.marek.Application;
 import com.marek.order.domain.Order;
-import com.marek.order.domain.OrderStatusEnum;
+import com.marek.order.domain.OrderStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +18,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import static com.marek.order.domain.OrderStatusEnum.*;
-import static java.lang.Thread.sleep;
+import static com.marek.order.domain.OrderStatus.INSERTED_END;
+import static com.marek.order.domain.OrderStatus.SHIP_END;
 import static java.util.Comparator.comparing;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by marek.papis on 2016-03-23.
@@ -34,7 +34,7 @@ public class DelegatorTest {
 
     private static final long DEFAULT_ID = 10;
     private static final String DEFAULT_ORDERDESCRIPTION = "Order Description";
-    private static final OrderStatusEnum DEFAULT_ORDER_STATUS = INSERTED_END;
+    private static final OrderStatus DEFAULT_ORDER_STATUS = INSERTED_END;
     private static final String DEFAULT_ITEM1 = "ITEM1";
     private static final String DEFAULT_ITEM2 = "ITEM2";
 
@@ -47,7 +47,7 @@ public class DelegatorTest {
     @Autowired
     Order order;
 
-    Order order1,order2,order3;
+    Order order1, order2, order3;
 
     @Before
     public void setUp() throws Exception {
@@ -75,10 +75,10 @@ public class DelegatorTest {
     @Test
     public void shouldCompleteSpecificOrder() throws Exception {
         ///[Reflection] mechanism to test private methods
-        Method method = Delegator.class.getDeclaredMethod("eventProcess", Long.class, OrderStatusEnum.class, Order.class);
+        Method method = Delegator.class.getDeclaredMethod("produceEvent", Long.class, OrderStatus.class, Order.class);
         method.setAccessible(true);
-        CompletableFuture<Order> future = (CompletableFuture<Order>)method.invoke(delegator, order1.getId(),order1.getOrderStatus(),order1);
-        assertEquals(order1.getId(),future.get().getId());
+        CompletableFuture<Order> future = (CompletableFuture<Order>) method.invoke(delegator, order1.getId(), order1.getOrderStatus(), order1);
+        assertEquals(order1.getId(), future.get().getId());
     }
 
     @Test

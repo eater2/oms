@@ -2,7 +2,7 @@ package com.marek.core.service;
 
 import com.marek.Application;
 import com.marek.order.domain.Order;
-import com.marek.order.domain.OrderStatusEnum;
+import com.marek.order.domain.OrderStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class EventStoreTest {
     private static final Logger log = LoggerFactory.getLogger(EventStoreTest.class);
 
     private static final long DEFAULT_ID = 10;
-    private static final OrderStatusEnum DEFAULT_ORDER_STATUS = OrderStatusEnum.INSERTED_END;
+    private static final OrderStatus DEFAULT_ORDER_STATUS = OrderStatus.INSERTED_END;
     private static final String DEFAULT_ORDER_DESCRIPTION = "Order Description";
     private static final String DEFAULT_ITEM1 = "ITEM1";
     private static final String DEFAULT_ITEM2 = "ITEM2";

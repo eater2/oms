@@ -20,20 +20,20 @@ public class EventStore {
 
     private final HashMap<Long, ArrayList<Order>> events = new HashMap<>();
 
-    public Set<Long> getOrdersSet() {
+    Set<Long> getOrdersSet() {
         return null != events.keySet() ? events.keySet() : new HashSet<>();
     }
 
-    public Collection<ArrayList<Order>> getOrders() {
+    Collection<ArrayList<Order>> getOrders() {
         return events.values();
     }
 
-    public void reset() {
+    void reset() {
         //for test purpose only
         events.clear();
     }
 
-    public Optional<Order> getLastOrderEvent(Long orderNumber) {
+    Optional<Order> getLastOrderEvent(Long orderNumber) {
         //[java8] [stampedLock]
         //If no threads are writing, and no threads have requested write access
         long stamp = stampedLock.tryOptimisticRead();
@@ -54,7 +54,7 @@ public class EventStore {
         }
     }
 
-    public Optional<Order> addEvent(Long orderNumber, Order order) {
+    Optional<Order> addEvent(Long orderNumber, Order order) {
         //If no threads are reading or writing
         long stamp = stampedLock.writeLock();
 

@@ -3,7 +3,7 @@ package com.marek.order.domain;
 /**
  * Created by marek.papis on 2016-03-17.
  */
-public enum OrderStatusEnum {
+public enum OrderStatus {
     INSERTED_END,
     FULFILLMENT_START,
     FULFILLMENT_END,
@@ -13,5 +13,5 @@ public enum OrderStatusEnum {
     INVENTORY_ERROR,
     SHIP_START,
     SHIP_END,
-    SHIP_ERROR
+    PROCESSING_ERROR, SHIP_ERROR
 }

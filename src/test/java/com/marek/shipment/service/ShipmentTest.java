@@ -9,22 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.*;
+import java.util.function.Function;
+
+import static org.junit.Assert.assertEquals;
+
 
 /**
  * Created by marek.papis on 2016-04-12.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-public class OrderShipTest {
+public class ShipmentTest {
 
 
     @Autowired
     Order order;
 
     @Autowired
-    private OrderShip orderShipService;
+    private Shipment shipmentService;
 
     @Before
     public void setUp() throws Exception {
@@ -33,6 +35,7 @@ public class OrderShipTest {
 
     @Test
     public void shouldChangeStatus() throws Exception {
-        assertEquals(orderShipService.getEndProcessingStatus(),orderShipService.process(order).getOrderStatus());
+        assertEquals(shipmentService.getEndProcessingStatus(), shipmentService.process(order).getOrderStatus());
     }
+
 }

@@ -2,7 +2,7 @@ package com.marek.inventory.service;
 
 import com.marek.core.service.EventProcessingIfc;
 import com.marek.order.domain.Order;
-import com.marek.order.domain.OrderStatusEnum;
+import com.marek.order.domain.OrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,18 +27,18 @@ public class InventoryCheck implements EventProcessingIfc {
     }
 
     @Override
-    public OrderStatusEnum getStartProcessingStatus() {
-        return OrderStatusEnum.INVENTORY_START;
+    public OrderStatus getStartProcessingStatus() {
+        return OrderStatus.INVENTORY_START;
     }
 
     @Override
-    public OrderStatusEnum getEndProcessingStatus() {
-        return OrderStatusEnum.INVENTORY_END;
+    public OrderStatus getEndProcessingStatus() {
+        return OrderStatus.INVENTORY_END;
     }
 
     @Override
-    public OrderStatusEnum getErrorProcessingStatus() {
-        return OrderStatusEnum.INVENTORY_ERROR;
+    public OrderStatus getErrorProcessingStatus() {
+        return OrderStatus.INVENTORY_ERROR;
     }
 
 }

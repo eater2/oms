@@ -22,9 +22,11 @@ public class Order {
     private static final AtomicInteger INITIAL_ORDER_SEQUENCE = new AtomicInteger(0);
     private static AtomicInteger orderSequence = INITIAL_ORDER_SEQUENCE;
 
-    private String orderDescription;
+    private String orderDescription = "";
 
-    private OrderStatusEnum orderStatus;
+    private OrderStatus orderStatus = OrderStatus.INSERTED_END;
+
+    private boolean isProcessed = false;
 
     private List<String> itemList = new ArrayList<>();
 
@@ -32,7 +34,7 @@ public class Order {
         this.id = orderSequence.incrementAndGet();
     }
 
-    public Order copyFrom(long id,OrderStatusEnum orderStatus, String orderDescription, List<String> itemList) {
+    public Order copyFrom(long id, OrderStatus orderStatus, String orderDescription, List<String> itemList) {
         Order order1 = new Order();
         order1.id = id;
         order1.orderStatus = orderStatus;
@@ -42,9 +44,16 @@ public class Order {
         return order1;
     }
 
-    public Order copyFrom(Order order, OrderStatusEnum orderStatus) {
+    public Order copyFrom(Order order, OrderStatus orderStatus) {
         Order order1 = copyFrom(order);
         order1.orderStatus = orderStatus;
+        return  order1;
+    }
+
+    public Order copyFrom(Order order, OrderStatus orderStatus, boolean isProcessed) {
+        Order order1 = copyFrom(order);
+        order1.orderStatus = orderStatus;
+        order1.isProcessed = isProcessed;
         return  order1;
     }
 
@@ -74,10 +83,13 @@ public class Order {
         return orderSequence.intValue();
     }
 
-    public OrderStatusEnum getOrderStatus() {
+    public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
+    public boolean isProcessed() {
+        return this.isProcessed;
+    }
     public List<Order> filterOrderList(List<Order> orders, Predicate<Order> predicate){
         return orders.stream().filter(predicate).collect(Collectors.toList());
     }
@@ -118,6 +130,7 @@ public class Order {
         result = 31 * result + itemList.hashCode();
         return result;
     }
+
 
 
 }

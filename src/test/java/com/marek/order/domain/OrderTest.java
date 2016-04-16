@@ -30,8 +30,8 @@ public class OrderTest {
     private static final String DEFAULT_ITEM1 = "ITEM1";
     private static final String DEFAULT_ITEM2 = "ITEM2";
     private static final int DEFAULT_ITEM_LIST_SIZE = 2;
-    private static final OrderStatusEnum DEFAULT_ORDER_STATUS = OrderStatusEnum.INSERTED_END;
-    private static final OrderStatusEnum UPDATED_ORDER_STATUS = OrderStatusEnum.FULFILLMENT_START;
+    private static final OrderStatus DEFAULT_ORDER_STATUS = OrderStatus.INSERTED_END;
+    private static final OrderStatus UPDATED_ORDER_STATUS = OrderStatus.FULFILLMENT_START;
 
 
     @Autowired
@@ -85,8 +85,8 @@ public class OrderTest {
 
     @Test
     public void testCopyFrom2Arguments() throws Exception {
-        order2 = order.copyFrom(order,OrderStatusEnum.FULFILLMENT_END);
-        assertEquals(OrderStatusEnum.FULFILLMENT_END,order2.getOrderStatus());
+        order2 = order.copyFrom(order, OrderStatus.FULFILLMENT_END);
+        assertEquals(OrderStatus.FULFILLMENT_END,order2.getOrderStatus());
         assertFalse(order == order2);
     }
 
