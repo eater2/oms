@@ -18,12 +18,12 @@ import static com.marek.order.domain.OrderStatus.*;
  * Created by marek.papis on 2016-04-07.
  */
 @Service
-public class EventProcessingFactory {
+class EventProcessingFactory {
 
     private static final EnumMap<OrderStatus, EventProcessingIfc> map = new EnumMap<>(OrderStatus.class);
 
     @Autowired
-    EventProcessingFactory(FulfillmentCreate fulfillment,
+    private EventProcessingFactory(FulfillmentCreate fulfillment,
                            InventoryCheck inventoryCheck,
                            Shipment shipment) {
         // [Factory Pattern] example
@@ -34,10 +34,9 @@ public class EventProcessingFactory {
     }
 
     public EventProcessingIfc createEventProcessing(OrderStatus statusEnum) throws IllegalArgumentException {
-        //[orElseThrow]
+        //[orElseThrow] [rethrow runtime exception]
         Optional<EventProcessingIfc> event = Optional.ofNullable(map.get(statusEnum));
-        event.orElseThrow(() -> new IllegalArgumentException("Cannot map such eventProcessing instance with name:" + statusEnum.toString()));
-        return event.get();
+        return event.orElseThrow(IllegalArgumentException::new);
     }
 
     public List<OrderStatus> getListOfEvents() {

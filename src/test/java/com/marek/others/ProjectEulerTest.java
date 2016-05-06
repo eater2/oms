@@ -30,16 +30,19 @@ public class ProjectEulerTest {
 
     BinaryOperator<Integer> sumAndMinus = (a, m) -> isPentagonal.apply(a + m) ? (isPentagonal.apply(m - a) ? 1 : 0) : 0;
 
+    @Ignore
     @Test
     public void shouldCheckIfIsPentagonal() throws Exception {
         assertTrue(isPentagonal.apply(1));
     }
 
+    @Ignore
     @Test
     public void shouldCheckIfIsNotPentagonal() throws Exception {
         assertFalse(isPentagonal.apply(2));
     }
 
+    @Ignore
     @Test
     public void shouldCalculatePentagonal() throws Exception {
         assertEquals((Integer)1,calcPentagonal.apply(1));

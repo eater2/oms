@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @Scope("prototype")
-public class Order {
+public class Order implements Comparable<Order>{
 
     private long id;
 
@@ -124,13 +125,11 @@ public class Order {
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
-        result = 31 * result + orderDescription.hashCode();
-        result = 31 * result + orderStatus.hashCode();
-        result = 31 * result + itemList.hashCode();
-        return result;
+        return Objects.hash(id,orderDescription,orderStatus,itemList);
     }
 
-
-
+    @Override
+    public int compareTo(Order o) {
+        return this.id < o.id ? -1 : this.id > o.id ? 1 : 0;
+    }
 }

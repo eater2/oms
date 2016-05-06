@@ -80,6 +80,7 @@ public class Delegator {
             //[java8] [CompletableFuture]
             //[Producer Consumer Design Pattern] Producer example (not clear case)
             //produce the event, puts it on Executor queue for further asynchronous processing
+            //[State Design Patter] 
             Order order2 = markProcessingStart(orderNbr, order);
             return CompletableFuture.supplyAsync(() ->
                             consumeEvent(orderStatus,order2),
@@ -114,12 +115,12 @@ public class Delegator {
 
     private Order markProcessingStart(Long orderNbr, Order order) {
         //lock the status on the order, for other threads not to interfere
-        return eventStore.addEvent(orderNbr, order.copyFrom(order,order.getOrderStatus(),true)).get();
+        return eventStore.addEvent(orderNbr, order.copyFrom(order,order.getOrderStatus(),true));
     }
 
     private Order markProcessingEnd(Long orderNbr, Order order) {
         //we take status from processing event (cause error status might have happened there
-        return eventStore.addEvent(orderNbr, order.copyFrom(order,order.getOrderStatus(),false)).get();
+        return eventStore.addEvent(orderNbr, order.copyFrom(order,order.getOrderStatus(),false));
     }
 
     @PreDestroy
