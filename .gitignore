@@ -1,4 +1,14 @@
-/src/test/soapui/%SOAPUI_OUTPUT
+######################
+# Intellij
+######################
+.idea/**
+*.iml
+*.iws
+*.ipr
+*.ids
+*.orig
+/*.iml
+/.idea
 ######################
 # Project Specific
 ######################
@@ -46,15 +56,6 @@ local.properties
 # PDT-specific
 .buildpath
 
-######################
-# Intellij
-######################
-.idea/**
-*.iml
-*.iws
-*.ipr
-*.ids
-*.orig
 
 ######################
 # Maven
@@ -131,3 +132,6 @@ src/main/webapp/bower_components
 
 soapuiTests
 /.factorypath
+
+/src/test/soapui/%SOAPUI_OUTPUT
+/.mvn/wrapper/maven-wrapper.properties
