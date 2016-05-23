@@ -5,10 +5,10 @@
 
 	<groupId>com.marek</groupId>
 	<artifactId>oms</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
-	<name>rekrutacja3</name>
+	<name>oms</name>
 	<description>oms project</description>
 
 	<parent>
