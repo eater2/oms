@@ -35,6 +35,15 @@ public class Order implements Comparable<Order>{
         this.id = orderSequence.incrementAndGet();
     }
 
+    public Order(OrderStatus orderStatus, String orderDescription, List<String> itemList) {
+        this.id = orderSequence.incrementAndGet();
+        this.orderStatus = orderStatus;
+        this.orderDescription = orderDescription;
+        //[java8] [Collectors] deep copy the list of strings
+        this.itemList = itemList.stream().collect(Collectors.toList());
+
+    }
+
     public Order copyFrom(long id, OrderStatus orderStatus, String orderDescription, List<String> itemList) {
         Order order1 = new Order();
         order1.id = id;

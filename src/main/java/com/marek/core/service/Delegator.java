@@ -5,6 +5,7 @@ import com.marek.order.domain.OrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PreDestroy;
@@ -30,12 +31,12 @@ public class Delegator {
 
 
     @Autowired
-    Delegator(EventStore eventStore, EventProcessingFactory eventProcessFactory) {
+    Delegator(EventStore eventStore,
+              EventProcessingFactory eventProcessFactory,
+              @Qualifier("taskExecutor") ExecutorService executor) {
         this.eventStore = eventStore;
         this.eventProcessFactory = eventProcessFactory;
-        this.executor = new ThreadPoolExecutor(THREAD_POOL_THREADS_INITIAL, THREAD_POOL_THREADS_MAX,
-                THREAD_POOL_TIMEOUT, TimeUnit.MILLISECONDS,
-                queue);
+        this.executor = executor;
     }
 
     /**
@@ -65,12 +66,9 @@ public class Delegator {
     /**
      * process single order event : [javaDoc] example
      *
-     * @param orderNbr
-     *          Order number
-     * @param orderStatus
-     *          Order status
-     * @param order
-     *          Order instance
+     * @param orderNbr    Order number
+     * @param orderStatus Order status
+     * @param order       Order instance
      * @return Completable Future of Order
      * @throws IllegalThreadStateException
      */
@@ -83,18 +81,18 @@ public class Delegator {
             //[State Design Patter] 
             Order order2 = markProcessingStart(orderNbr, order);
             return CompletableFuture.supplyAsync(() ->
-                            consumeEvent(orderStatus,order2),
+                            consumeEvent(orderStatus, order2),
                     executor)
-                    .thenApply(o -> markProcessingEnd(orderNbr,o))
+                    .thenApply(o -> markProcessingEnd(orderNbr, o))
                     ;
 
         } catch (RejectedExecutionException r) {
             log.error("exception: " + r);
-            eventStore.addEvent(orderNbr, order.copyFrom(order, OrderStatus.PROCESSING_ERROR,false));
+            eventStore.addEvent(orderNbr, order.copyFrom(order, OrderStatus.PROCESSING_ERROR, false));
             throw new IllegalThreadStateException("exception on thread's execution:" + r.toString());
         } catch (Exception e) {
             log.error("exception:" + e);
-            eventStore.addEvent(orderNbr, order.copyFrom(order, OrderStatus.PROCESSING_ERROR,false ));
+            eventStore.addEvent(orderNbr, order.copyFrom(order, OrderStatus.PROCESSING_ERROR, false));
             throw new IllegalThreadStateException("exception on thread's execution:" + e.toString());
         }
 
@@ -102,6 +100,7 @@ public class Delegator {
 
     /**
      * [Producer Consumer Design Pattern] Consumer example
+     *
      * @param orderStatus
      * @param order2
      * @return
@@ -115,12 +114,12 @@ public class Delegator {
 
     private Order markProcessingStart(Long orderNbr, Order order) {
         //lock the status on the order, for other threads not to interfere
-        return eventStore.addEvent(orderNbr, order.copyFrom(order,order.getOrderStatus(),true));
+        return eventStore.addEvent(orderNbr, order.copyFrom(order, order.getOrderStatus(), true));
     }
 
     private Order markProcessingEnd(Long orderNbr, Order order) {
         //we take status from processing event (cause error status might have happened there
-        return eventStore.addEvent(orderNbr, order.copyFrom(order,order.getOrderStatus(),false));
+        return eventStore.addEvent(orderNbr, order.copyFrom(order, order.getOrderStatus(), false));
     }
 
     @PreDestroy

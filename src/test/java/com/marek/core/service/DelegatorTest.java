@@ -3,6 +3,7 @@ package com.marek.core.service;
 import com.marek.Application;
 import com.marek.order.domain.Order;
 import com.marek.order.domain.OrderStatus;
+import com.marek.utils.howto.DesignPatterns;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import static com.marek.order.domain.OrderStatus.INSERTED_END;
 import static com.marek.order.domain.OrderStatus.SHIP_END;
@@ -70,6 +72,7 @@ public class DelegatorTest {
         orderList.stream().forEach(o -> eventStore.addEvent(o.getId(), o));
         ;
 
+
     }
 
     @Test
@@ -95,6 +98,9 @@ public class DelegatorTest {
         assertEquals(SHIP_END, eventStore.getLastOrderEvent(order1.getId()).get().getOrderStatus());
         assertEquals(SHIP_END, eventStore.getLastOrderEvent(order2.getId()).get().getOrderStatus());
         assertEquals(SHIP_END, eventStore.getLastOrderEvent(order3.getId()).get().getOrderStatus());
+
+        DesignPatterns.whenIsTheAdapterDesignPatternUsed();
+        com.marek.utils.howto.DesignPatterns.whatIsTheAdapterDesignPattern();
 
     }
 }
