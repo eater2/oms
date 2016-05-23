@@ -1,9 +1,11 @@
 package com.marek.core.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 
 import java.util.concurrent.*;
 
@@ -13,20 +15,18 @@ import java.util.concurrent.*;
 @Configuration
 public class AppConfiguration {
 
+    @Autowired
+    Environment env;
+
     @Bean(name = "taskExecutor")
     @Scope("prototype")
-    public ExecutorService getExecutor(
-            @Value("${array_size}") int ARRAY_SIZE,
-            @Value("${thread_pool_threads_initial}")
-                    int thread_pool_threads_initial,
-            @Value("${thread_pool_threads_max}")
-                    int thread_pool_threads_max,
-            @Value("${thread_pool_timeout}")
-                    long thread_pool_timeout
-    ) {
-        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(ARRAY_SIZE);
-        return new ThreadPoolExecutor(thread_pool_threads_initial, thread_pool_threads_max,
-                thread_pool_timeout, TimeUnit.MILLISECONDS,
+    public ExecutorService getExecutor() {
+        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(Integer.valueOf(env.getProperty("array_size")));
+        return new ThreadPoolExecutor(
+                Integer.valueOf(env.getProperty("thread_pool_threads_initial")),
+                Integer.valueOf(env.getProperty("thread_pool_threads_max")),
+                Integer.valueOf(env.getProperty("thread_pool_timeout")),
+                TimeUnit.MILLISECONDS,
                 queue);
     }
 
