@@ -40,5 +40,4 @@ public class AppConfigurationTest {
         assertEquals(env.getProperty("app.name"),appName);
         assertTrue(executor instanceof ExecutorService);
     }
-
 }

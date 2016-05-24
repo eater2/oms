@@ -29,5 +29,4 @@ public class AppConfiguration {
                 TimeUnit.MILLISECONDS,
                 queue);
     }
-
 }
