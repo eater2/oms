@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 /**
@@ -33,11 +33,12 @@ public class EventProcessingFactoryTest {
 
     @Test
     public void shouldReturnFulfillmentService() throws Exception {
-        assertEquals(fulfillmentCreate,eventProcessingFactory.createEventProcessing(OrderStatus.INVENTORY_END));
+        assertThat(fulfillmentCreate).isEqualTo(eventProcessingFactory.createEventProcessing(OrderStatus.INVENTORY_END));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowRuntimeException() throws Exception {
-        eventProcessingFactory.createEventProcessing(OrderStatus.FULFILLMENT_START);
+        assertThatThrownBy(() -> eventProcessingFactory.createEventProcessing(OrderStatus.FULFILLMENT_START))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

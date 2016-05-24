@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by marek.papis on 2016-04-12.
@@ -34,6 +34,6 @@ public class ShippingContextTest {
 
     @Test
     public void shouldShipOrderCorrectly() throws Exception {
-        assertEquals(order, shippingContext.shipOrder(order));
+        assertThat(order).isEqualTo(shippingContext.shipOrder(order));
     }
 }

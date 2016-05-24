@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static junit.framework.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by marek.papis on 2016-04-12.
@@ -30,7 +30,7 @@ public class InventoryCheckTest {
 
     @Test
     public void shouldChangeStatus() throws Exception {
-        assertEquals(inventoryCheckService.getEndProcessingStatus(), inventoryCheckService.process(order).getOrderStatus());
+        assertThat(inventoryCheckService.getEndProcessingStatus()).isEqualTo(inventoryCheckService.process(order).getOrderStatus());
     }
 
 }

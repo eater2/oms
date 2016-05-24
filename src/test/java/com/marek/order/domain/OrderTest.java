@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by marek.papis on 2016-03-17.
@@ -50,27 +50,27 @@ public class OrderTest {
 
     @Test
     public void testGetId() throws Exception {
-        assertEquals(DEFAULT_ID, order.getId());
+        assertThat(DEFAULT_ID).isEqualTo(order.getId());
     }
 
     @Test
     public void testGetOrderDescription() throws Exception {
-        assertEquals(DEFAULT_ORDERDESCRIPTION, order.getOrderDescription());
+        assertThat(DEFAULT_ORDERDESCRIPTION).isEqualTo(order.getOrderDescription());
     }
 
     @Test
     public void testGetItemList() throws Exception {
-        assertEquals(DEFAULT_ITEM_LIST_SIZE, order.getItemList().size());
+        assertThat(DEFAULT_ITEM_LIST_SIZE).isEqualTo(order.getItemList().size());
     }
 
     @Test
     public void testGetOrderSequence() throws Exception {
-        assertTrue(order.getOrderSequence() > 1);
+        assertThat(order.getOrderSequence()).isGreaterThan(1);
     }
 
     @Test
     public void testGetOrderStatus() throws Exception {
-        assertEquals(DEFAULT_ORDER_STATUS, order.getOrderStatus());
+        assertThat(DEFAULT_ORDER_STATUS).isEqualTo(order.getOrderStatus());
     }
 
     @Test
@@ -79,15 +79,14 @@ public class OrderTest {
         //only 1 order has items list not empty
         //[java8] [Predicate] usage of Predicate object in Lambda
         List<Order> orderListWithItems = order.filterOrderList(orderList, (o) -> o.getItemList().size() > 0);
-
-        assertEquals(1, orderListWithItems.size());
+        assertThat(1).isEqualTo(orderListWithItems.size());
     }
 
     @Test
     public void testCopyFrom2Arguments() throws Exception {
         order2 = order.copyFrom(order, OrderStatus.FULFILLMENT_END);
-        assertEquals(OrderStatus.FULFILLMENT_END,order2.getOrderStatus());
-        assertFalse(order == order2);
+        assertThat(OrderStatus.FULFILLMENT_END).isEqualTo(order2.getOrderStatus());
+        assertThat(order).isNotEqualTo(order2);
     }
 
 

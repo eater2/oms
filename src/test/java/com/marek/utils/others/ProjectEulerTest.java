@@ -1,4 +1,4 @@
-package com.marek.others;
+package com.marek.utils.others;
 
 import com.marek.Application;
 import org.junit.Ignore;

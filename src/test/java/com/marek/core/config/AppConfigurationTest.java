@@ -1,7 +1,6 @@
 package com.marek.core.config;
 
 import com.marek.Application;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by marek.papis on 2016-05-08.
@@ -37,7 +36,7 @@ public class AppConfigurationTest {
 
     @Test
     public void returnsExecutorService() throws Exception {
-        assertEquals(env.getProperty("app.name"),appName);
-        assertTrue(executor instanceof ExecutorService);
+        assertThat(env.getProperty("app.name")).isEqualTo(appName);
+        assertThat(executor).isInstanceOf(ExecutorService.class);
     }
 }

@@ -11,8 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.function.Function;
 
-import static org.junit.Assert.assertEquals;
-
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by marek.papis on 2016-04-12.
@@ -30,12 +29,11 @@ public class ShipmentTest {
 
     @Before
     public void setUp() throws Exception {
-
     }
 
     @Test
     public void shouldChangeStatus() throws Exception {
-        assertEquals(shipmentService.getEndProcessingStatus(), shipmentService.process(order).getOrderStatus());
+        assertThat(shipmentService.getEndProcessingStatus()).isEqualTo( shipmentService.process(order).getOrderStatus());
     }
 
 }

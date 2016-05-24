@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 import static com.marek.order.domain.OrderStatus.INSERTED_END;
 import static com.marek.order.domain.OrderStatus.SHIP_END;
 import static java.util.Comparator.comparing;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * Created by marek.papis on 2016-03-23.
@@ -71,8 +71,6 @@ public class DelegatorTest {
         //Push 3 orders into EventStore
         orderList.stream().forEach(o -> eventStore.addEvent(o.getId(), o));
         ;
-
-
     }
 
     @Test
@@ -81,7 +79,8 @@ public class DelegatorTest {
         Method method = Delegator.class.getDeclaredMethod("produceEvent", Long.class, OrderStatus.class, Order.class);
         method.setAccessible(true);
         CompletableFuture<Order> future = (CompletableFuture<Order>) method.invoke(delegator, order1.getId(), order1.getOrderStatus(), order1);
-        assertEquals(order1.getId(), future.get().getId());
+
+        assertThat(order1.getId()).isEqualTo(future.get().getId());
     }
 
     @Test
@@ -95,9 +94,9 @@ public class DelegatorTest {
         //dump whole event Store
         log.info(eventStore.toString());
 
-        assertEquals(SHIP_END, eventStore.getLastOrderEvent(order1.getId()).get().getOrderStatus());
-        assertEquals(SHIP_END, eventStore.getLastOrderEvent(order2.getId()).get().getOrderStatus());
-        assertEquals(SHIP_END, eventStore.getLastOrderEvent(order3.getId()).get().getOrderStatus());
+        assertThat(SHIP_END).isEqualTo(eventStore.getLastOrderEvent(order1.getId()).get().getOrderStatus());
+        assertThat(SHIP_END).isEqualTo(eventStore.getLastOrderEvent(order2.getId()).get().getOrderStatus());
+        assertThat(SHIP_END).isEqualTo(eventStore.getLastOrderEvent(order3.getId()).get().getOrderStatus());
 
         DesignPatterns.whenIsTheAdapterDesignPatternUsed();
         com.marek.utils.howto.DesignPatterns.whatIsTheAdapterDesignPattern();

@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.*;
 
 import java.util.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by marek.papis on 2016-03-22.
@@ -47,19 +48,19 @@ public class EventStoreTest {
 
     @Test
     public void eventStoreContainsOrder() throws Exception {
-        assertEquals(DEFAULT_ID,eventStore.getLastOrderEvent(DEFAULT_ID).get().getId());
+        assertThat(DEFAULT_ID).isEqualTo(eventStore.getLastOrderEvent(DEFAULT_ID).get().getId());
     }
 
     @Test
     public void getOrdersSetTest() {
-        assertEquals(3,eventStore.getOrdersSet().size());
+        assertThat(3).isEqualTo(eventStore.getOrdersSet().size());
         log.info(eventStore.toString());
     }
 
     @Test
     public void resetTest() {
         eventStore.reset();
-        assertEquals(0,eventStore.getOrdersSet().size());
+        assertThat(0).isEqualTo(eventStore.getOrdersSet().size());
     }
 
 

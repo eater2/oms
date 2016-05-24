@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-
+import static org.assertj.core.api.Assertions.assertThat;
 /**
  * Created by marek.papis on 2016-03-23.
  */
@@ -27,6 +25,6 @@ public class FulfillmentCreateTest {
 
     @Test
     public void shouldChangeStatus() throws Exception {
-        assertEquals(fulfillment.getEndProcessingStatus(),fulfillment.process(order).getOrderStatus());
+        assertThat(fulfillment.getEndProcessingStatus()).isEqualTo(fulfillment.process(order).getOrderStatus());
     }
 }
