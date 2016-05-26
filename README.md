@@ -1,5 +1,5 @@
-# oms
-My cute Order Management System implementation
+# OAS
+Order AllocationSystem core implementation using Spring Boot, Spring MVC
 
 
 BUILD Status:
