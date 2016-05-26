@@ -1,5 +1,5 @@
-# OAS
-Order Allocation Management System core implementation using Spring Boot, Spring MVC
+#Order Allocation Management System 
+Event Sourcing implementation using Spring Boot, Spring MVC
 
 
 BUILD Status:
