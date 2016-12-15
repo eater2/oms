@@ -1,6 +1,7 @@
 package com.marek.utils.others;
 
 import com.marek.Application;
+import org.h2.util.IntArray;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,15 +9,21 @@ import org.slf4j.Logger;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
 
 /**
  * Created by marek.papis on 2016-04-14.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
 public class ProjectEulerTest {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(ProjectEulerTest.class);
@@ -46,6 +53,24 @@ public class ProjectEulerTest {
     @Test
     public void shouldCalculatePentagonal() throws Exception {
         assertEquals((Integer)1,calcPentagonal.apply(1));
+    }
+
+    @Ignore
+    @Test
+    public void shouldCalculatePentagonal1() throws Exception {
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("1");
+        strings.add("2");
+
+        String s = strings.stream()
+                .filter(e -> e.equals("3"))
+                .findAny()
+                .orElse(new String("3"));
+
+        IntStream.range(1,10)
+                .forEach(e->strings.add(String.valueOf(e)));
+
+        assertThat(s).isEqualTo("3");
     }
 
     @Ignore

@@ -21,11 +21,11 @@ public class AppConfiguration {
     @Bean(name = "taskExecutor")
     @Scope("prototype")
     public ExecutorService getExecutor() {
-        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(Integer.valueOf(env.getProperty("array_size")));
+        BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(Integer.valueOf(env.getProperty("threads.array_size")));
         return new ThreadPoolExecutor(
-                Integer.valueOf(env.getProperty("thread_pool_threads_initial")),
-                Integer.valueOf(env.getProperty("thread_pool_threads_max")),
-                Integer.valueOf(env.getProperty("thread_pool_timeout")),
+                Integer.valueOf(env.getProperty("threads.thread_pool_threads_initial")),
+                Integer.valueOf(env.getProperty("threads.thread_pool_threads_max")),
+                Integer.valueOf(env.getProperty("threads.thread_pool_timeout")),
                 TimeUnit.MILLISECONDS,
                 queue);
     }

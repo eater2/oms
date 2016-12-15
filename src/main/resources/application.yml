@@ -1,0 +1,29 @@
+app:
+    name: OMS
+
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:oms
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    database: H2
+    show_sql: true
+    hibernate.ddl-auto: create-drop
+    hibernate.naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    hibernate.hbm2ddl.auto: update
+    hibernate.id.new_generator_mappings: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+threads:
+  array_size: 10
+  thread_pool_threads_initial: 1
+  thread_pool_threads_max: 3
+  thread_pool_timeout: 0

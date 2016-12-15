@@ -17,7 +17,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringApplicationConfiguration(classes = Application.class)
 public class FulfillmentCreateTest {
 
-    @Autowired
+    @Before
+    public void setUp() throws Exception {
+        order = new Order();
+    }
+
     Order order;
 
     @Autowired

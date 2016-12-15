@@ -25,6 +25,15 @@ public class FactoryPattern {
         return Optional.ofNullable(mapp
                 .get(orderStatus))
                 .orElseThrow(() -> new IllegalArgumentException("Incorrect status given"));
+
+/*      FOr [flyweight design patter]
+        ShippingStrategy shippingStrategy = Optional.ofNullable(mapp
+                .get(orderStatus))
+                .orElse(new StoreShippingStrategy());
+        mapp.put(orderStatus, shippingStrategy);
+*/
+
+
     }
 }
 

@@ -12,7 +12,6 @@ public class Application {
 
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
-
     Application() {
     }
 

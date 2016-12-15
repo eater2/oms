@@ -24,11 +24,11 @@ public class ShippingContextTest {
     @Autowired
     private WarehouseShippingStrategy warehouseShippingStrategy;
 
-    @Autowired
     private Order order;
 
     @Before
     public void preTest() throws Exception {
+        order = new Order();
         shippingContext.setShippingContext(warehouseShippingStrategy);
     }
 

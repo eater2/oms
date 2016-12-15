@@ -35,11 +35,12 @@ public class EventStoreTest {
     @Autowired
     EventStore eventStore;
 
-    @Autowired
     Order order1;
 
     @Before
     public void setUp() {
+        order1 = new Order();
+
         eventStore.reset();
         eventStore.addEvent(DEFAULT_ID,order1.copyFrom(DEFAULT_ID,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));
         eventStore.addEvent(DEFAULT_ID+1,order1.copyFrom(DEFAULT_ID+1,DEFAULT_ORDER_STATUS, DEFAULT_ORDER_DESCRIPTION,Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2)));

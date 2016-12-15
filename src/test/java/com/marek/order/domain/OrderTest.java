@@ -34,17 +34,14 @@ public class OrderTest {
     private static final OrderStatus UPDATED_ORDER_STATUS = OrderStatus.FULFILLMENT_START;
 
 
-    @Autowired
-    Order order;
-
-    @Autowired
-    Order order1;
-
-    @Autowired
-    Order order2;
+    private Order order;
+    private Order order1;
+    private Order order2;
 
     @Before
     public void setUp() {
+        order = new Order();
+        order1 = new Order();
         order = order.copyFrom(DEFAULT_ID, DEFAULT_ORDER_STATUS, DEFAULT_ORDERDESCRIPTION, Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
     }
 
@@ -63,10 +60,6 @@ public class OrderTest {
         assertThat(DEFAULT_ITEM_LIST_SIZE).isEqualTo(order.getItemList().size());
     }
 
-    @Test
-    public void testGetOrderSequence() throws Exception {
-        assertThat(order.getOrderSequence()).isGreaterThan(1);
-    }
 
     @Test
     public void testGetOrderStatus() throws Exception {

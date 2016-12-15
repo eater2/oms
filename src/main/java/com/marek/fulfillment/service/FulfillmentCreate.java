@@ -17,7 +17,7 @@ public class FulfillmentCreate implements EventProcessingIfc {
     @Override
     public Order process(Order order) {
         try {
-            log.info("order id:"+order.getId()+" processing fulfillment");
+            log.info("order id:"+order.getId()+" processing Fulfillment");
             return order.copyFrom(order, getEndProcessingStatus());
         } catch (Exception e) {
             log.error(e.getMessage() + e);

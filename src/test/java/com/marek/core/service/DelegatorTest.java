@@ -3,7 +3,6 @@ package com.marek.core.service;
 import com.marek.Application;
 import com.marek.order.domain.Order;
 import com.marek.order.domain.OrderStatus;
-import com.marek.utils.howto.DesignPatterns;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,13 +45,12 @@ public class DelegatorTest {
     @Autowired
     Delegator delegator;
 
-    @Autowired
     Order order;
-
     Order order1, order2, order3;
 
     @Before
     public void setUp() throws Exception {
+        order = new Order();
         order1 = order.copyFrom(DEFAULT_ID + 2, DEFAULT_ORDER_STATUS, DEFAULT_ORDERDESCRIPTION, Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
         order2 = order.copyFrom(DEFAULT_ID, DEFAULT_ORDER_STATUS, DEFAULT_ORDERDESCRIPTION, Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
         order3 = order.copyFrom(DEFAULT_ID + 1, DEFAULT_ORDER_STATUS, DEFAULT_ORDERDESCRIPTION, Arrays.asList(DEFAULT_ITEM1, DEFAULT_ITEM2));
@@ -97,9 +95,6 @@ public class DelegatorTest {
         assertThat(SHIP_END).isEqualTo(eventStore.getLastOrderEvent(order1.getId()).get().getOrderStatus());
         assertThat(SHIP_END).isEqualTo(eventStore.getLastOrderEvent(order2.getId()).get().getOrderStatus());
         assertThat(SHIP_END).isEqualTo(eventStore.getLastOrderEvent(order3.getId()).get().getOrderStatus());
-
-        DesignPatterns.whenIsTheAdapterDesignPatternUsed();
-        com.marek.utils.howto.DesignPatterns.whatIsTheAdapterDesignPattern();
 
     }
 }

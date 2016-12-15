@@ -19,12 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class Delegator {
     private static final Logger log = LoggerFactory.getLogger(Delegator.class);
-    private static final int ARRAY_SIZE = 10;
-    private static final int THREAD_POOL_THREADS_INITIAL = 1;
-    private static final int THREAD_POOL_THREADS_MAX = 3;
-    private static final long THREAD_POOL_TIMEOUT = 0L;
 
-    private final BlockingQueue<Runnable> queue = new ArrayBlockingQueue<>(ARRAY_SIZE);
     private EventProcessingFactory eventProcessFactory;
     private EventStore eventStore;
     private ExecutorService executor;
